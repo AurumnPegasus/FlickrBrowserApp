@@ -22,15 +22,26 @@ enum DownloadStatus
 public class GetRawData extends AsyncTask <String,Void,String>{
     private static final String TAG = "GetRawData";
     private DownloadStatus memberDownloadStatus;
+    private final OnDownloadData memberCallBack;
 
-    public GetRawData() {
+    interface OnDownloadData{
+        void onDownloadCompleted(String data, DownloadStatus status);
+    }
+
+    public GetRawData(OnDownloadData callBack) {
         this.memberDownloadStatus = DownloadStatus.IDLE;
+        this.memberCallBack = callBack;
     }
 
     @Override
     protected void onPostExecute(String s) {
         Log.d(TAG, "onPostExecute: parameter is " + s);
 //        super.onPostExecute(s);
+        if(memberCallBack != null)
+        {
+            memberCallBack.onDownloadCompleted(s,memberDownloadStatus);
+        }
+        Log.d(TAG, "onPostExecute: ends");
     }
 
     @Override
