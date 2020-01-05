@@ -19,7 +19,7 @@ enum DownloadStatus
     OK
 }
 
-public class GetRawData extends AsyncTask <String,Void,String>{
+class GetRawData extends AsyncTask <String,Void,String>{
     private static final String TAG = "GetRawData";
     private DownloadStatus memberDownloadStatus;
     private final OnDownloadData memberCallBack;

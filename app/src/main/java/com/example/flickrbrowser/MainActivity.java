@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements GetRawData.OnDownloadData {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements GetFlickrJSONData.OnDataAvaialble {
     private static final String TAG = "MainActivity";
     
     @Override
@@ -33,9 +35,18 @@ public class MainActivity extends AppCompatActivity implements GetRawData.OnDown
             }
         });
 
-        GetRawData getRawData = new GetRawData(this);
-        getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=fanart&format=json&nojsoncallback=1");
+ //       GetRawData getRawData = new GetRawData(this);
+  //      getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=fanart&format=json&nojsoncallback=1");
         Log.d(TAG, "onCreate: ended");
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume: Starts");
+        super.onResume();
+        GetFlickrJSONData getFlickrJSONData = new GetFlickrJSONData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
+        getFlickrJSONData.executeOnSameThread("world war, memes");
+        Log.d(TAG, "onResume: ends");
     }
 
     @Override
@@ -62,16 +73,12 @@ public class MainActivity extends AppCompatActivity implements GetRawData.OnDown
     }
 
     @Override
-    public void onDownloadCompleted(String data, DownloadStatus status)
-    {
-        if(status == DownloadStatus.OK)
-        {
-            Log.d(TAG, "onDownloadCompleted: Download completed successfully, the data is " + data);
+    public void onDataAvailable(List<Photo> data, DownloadStatus status) {
+        if(status == DownloadStatus.OK){
+            Log.d(TAG, "onDataAvailable: success " + data);
         }
-        else
-        {
-            Log.e(TAG, "onDownloadCompleted: Error in downloading with status " + status);
+        else{
+            Log.d(TAG, "onDataAvailable: failure " + status);
         }
     }
-
 }
