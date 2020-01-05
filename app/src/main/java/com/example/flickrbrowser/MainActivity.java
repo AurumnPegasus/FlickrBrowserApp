@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJSONData
         Log.d(TAG, "onResume: Starts");
         super.onResume();
         GetFlickrJSONData getFlickrJSONData = new GetFlickrJSONData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
-        getFlickrJSONData.executeOnSameThread("world war, memes");
+        getFlickrJSONData.execute("world war, memes");
         Log.d(TAG, "onResume: ends");
     }
 

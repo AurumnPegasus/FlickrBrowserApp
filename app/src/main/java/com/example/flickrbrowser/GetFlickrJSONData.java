@@ -1,6 +1,7 @@
 package com.example.flickrbrowser;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -10,13 +11,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-class GetFlickrJSONData implements GetRawData.OnDownloadData {
+class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements  GetRawData.OnDownloadData {
+
     private static final String TAG = "GetFlickrJSONData";
     private List<Photo> memberPhotoList = null;
     private String baseUrl = null;
     private String memberLanguage = null;
     private boolean memberMatchAll;
     private final OnDataAvaialble memberCallBack;
+    private boolean runningOnSameThread = false;
 
     interface OnDataAvaialble {
         void onDataAvailable(List<Photo> data, DownloadStatus status);
@@ -30,8 +33,31 @@ class GetFlickrJSONData implements GetRawData.OnDownloadData {
         this.memberCallBack = memberCallBack;
     }
 
+    @Override
+    protected void onPostExecute(List<Photo> photos) {
+        Log.d(TAG, "onPostExecute: starts");
+        if(memberCallBack!=null)
+        {
+            memberCallBack.onDataAvailable(memberPhotoList, DownloadStatus.OK);
+        }
+        Log.d(TAG, "onPostExecute: Ends");
+    }
+
+    @Override
+    protected List<Photo> doInBackground(String... params) {
+        Log.d(TAG, "doInBackground: starts");
+        String destinationUri = createUri(params[0], memberLanguage, memberMatchAll);
+        GetRawData getRawData = new GetRawData(this);
+        getRawData.runInsideThread(destinationUri);
+        Log.d(TAG, "doInBackground: Ends");
+        return memberPhotoList;
+    }
+
+
+    //Isnt used anywhere, is there primarly as a blueprint so it can be used in other programs
     void executeOnSameThread(String searchCriteria){
         Log.d(TAG, "executeOnSameThread: starts");
+        runningOnSameThread = true;
         String destinationUri = createUri(searchCriteria, memberLanguage, memberMatchAll);
         GetRawData getRawData = new GetRawData(this);
         getRawData.execute(destinationUri);
@@ -84,7 +110,7 @@ class GetFlickrJSONData implements GetRawData.OnDownloadData {
             }
         }
 
-        if(memberCallBack != null)
+        if(memberCallBack != null && runningOnSameThread)
         {
             memberCallBack.onDataAvailable(memberPhotoList, status);
         }

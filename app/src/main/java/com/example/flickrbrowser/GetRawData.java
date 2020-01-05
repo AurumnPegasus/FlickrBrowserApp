@@ -35,7 +35,7 @@ class GetRawData extends AsyncTask <String,Void,String>{
 
     @Override
     protected void onPostExecute(String s) {
-        Log.d(TAG, "onPostExecute: parameter is " + s);
+//        Log.d(TAG, "onPostExecute: parameter is " + s);
 //        super.onPostExecute(s);
         if(memberCallBack != null)
         {
@@ -107,4 +107,53 @@ class GetRawData extends AsyncTask <String,Void,String>{
         memberDownloadStatus = DownloadStatus.FAILED_OR_EMPTY;
         return null;
     }
+
+     void runInsideThread(String s)
+     {
+         Log.d(TAG, "runInsideThread: Starts");
+//         onPostExecute(doInBackground(s));
+         if(memberCallBack != null)
+         {
+             String result = doInBackground(s);
+             memberCallBack.onDownloadCompleted(result, DownloadStatus.OK);
+         }
+         Log.d(TAG, "runInsideThread: Ends");
+     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
