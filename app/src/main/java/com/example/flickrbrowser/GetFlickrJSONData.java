@@ -18,14 +18,14 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
     private String baseUrl = null;
     private String memberLanguage = null;
     private boolean memberMatchAll;
-    private final OnDataAvaialble memberCallBack;
+    private final OnDataAvailable memberCallBack;
     private boolean runningOnSameThread = false;
 
-    interface OnDataAvaialble {
+    interface OnDataAvailable {
         void onDataAvailable(List<Photo> data, DownloadStatus status);
     }
 
-    public GetFlickrJSONData(String baseUrl, String memberLanguage, boolean memberMatchAll, OnDataAvaialble memberCallBack) {
+    public GetFlickrJSONData(String baseUrl, String memberLanguage, boolean memberMatchAll, OnDataAvailable memberCallBack) {
 
         this.baseUrl = baseUrl;
         this.memberLanguage = memberLanguage;
@@ -36,8 +36,9 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
     @Override
     protected void onPostExecute(List<Photo> photos) {
         Log.d(TAG, "onPostExecute: starts");
-        if(memberCallBack!=null)
+        if(memberCallBack != null)
         {
+            //Log.d(TAG, "onPostExecute: I am calling back");
             memberCallBack.onDataAvailable(memberPhotoList, DownloadStatus.OK);
         }
         Log.d(TAG, "onPostExecute: Ends");
@@ -47,6 +48,8 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
     protected List<Photo> doInBackground(String... params) {
         Log.d(TAG, "doInBackground: starts");
         String destinationUri = createUri(params[0], memberLanguage, memberMatchAll);
+        Log.d(TAG, "doInBackground: destination uri is " + destinationUri);
+        //runningOnSameThread = true;
         GetRawData getRawData = new GetRawData(this);
         getRawData.runInsideThread(destinationUri);
         Log.d(TAG, "doInBackground: Ends");
@@ -85,7 +88,7 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
             try{
                 JSONObject jsonObject = new JSONObject(data);
                 JSONArray itemsArray = jsonObject.getJSONArray("items");
-
+                Log.d(TAG, "onDownloadCompleted: number of iterations is " + itemsArray.length());
                 for(int i=0;i<itemsArray.length();i++)
                 {
                     JSONObject jsonPhoto = itemsArray.getJSONObject(i);
@@ -109,38 +112,15 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
                 status = DownloadStatus.FAILED_OR_EMPTY;
             }
         }
+        //if(memberCallBack!=null)
+            //Log.d(TAG, "onDownloadCompleted: Member cal back isnt null");
 
+        Log.d(TAG, "onDownloadCompleted: running on same thread is " + runningOnSameThread);
         if(memberCallBack != null && runningOnSameThread)
         {
+            Log.d(TAG, "onDownloadCompleted: I am here");
             memberCallBack.onDataAvailable(memberPhotoList, status);
         }
         Log.d(TAG, "onDownloadCompleted: Ends");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewAdapter.FlickrImageViewHolder> {
@@ -34,12 +36,20 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
 
     @Override
     public void onBindViewHolder(@NonNull FlickrImageViewHolder holder, int position) {
+    //called by the layout manager when it needs more data in existing row
+        Photo photItem = memberPhotoList.get(position);
+        Log.d(TAG, "onBindViewHolder: " + photItem.getMemberTitle() + "---->" + position);
+        Picasso.get().load(photItem.getMemberImage())
+                .error(R.drawable.place_holder)
+                .placeholder(R.drawable.place_holder)
+                .into(holder.thumbnail);
 
+        holder.title.setText(photItem.getMemberTitle());
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: Called");
+ //       Log.d(TAG, "getItemCount: Called");
         return ((memberPhotoList!=null) && (memberPhotoList.size() != 0)?memberPhotoList.size():0);
     }
 

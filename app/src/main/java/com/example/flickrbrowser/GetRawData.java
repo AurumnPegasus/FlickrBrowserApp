@@ -46,6 +46,7 @@ class GetRawData extends AsyncTask <String,Void,String>{
 
     @Override
     protected String doInBackground(String... strings) {
+        Log.d(TAG, "doInBackground: in GetRawData starts");
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         if(strings == null)
@@ -53,7 +54,7 @@ class GetRawData extends AsyncTask <String,Void,String>{
             memberDownloadStatus = DownloadStatus.NOT_INITIALISED;
             return null;
         }
-
+        
         try{
             memberDownloadStatus = DownloadStatus.PROCESSING;
             URL url = new URL(strings[0]);
@@ -75,6 +76,7 @@ class GetRawData extends AsyncTask <String,Void,String>{
             }
 
             memberDownloadStatus = DownloadStatus.OK;
+            //Log.d(TAG, "doInBackground: I am here ");
             return result.toString();
         }
         catch (MalformedURLException e)
@@ -105,6 +107,7 @@ class GetRawData extends AsyncTask <String,Void,String>{
             }
         }
         memberDownloadStatus = DownloadStatus.FAILED_OR_EMPTY;
+        Log.d(TAG, "doInBackground: in GetRawData ends");
         return null;
     }
 
@@ -114,46 +117,12 @@ class GetRawData extends AsyncTask <String,Void,String>{
 //         onPostExecute(doInBackground(s));
          if(memberCallBack != null)
          {
-             String result = doInBackground(s);
-             memberCallBack.onDownloadCompleted(result, DownloadStatus.OK);
+             //Log.d(TAG, "runInsideThread: membercallback isnt null");
+             //Log.d(TAG, "runInsideThread: " + s);
+             memberCallBack.onDownloadCompleted(doInBackground(s), DownloadStatus.OK);
          }
          Log.d(TAG, "runInsideThread: Ends");
      }
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

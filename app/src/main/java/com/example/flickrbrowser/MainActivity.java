@@ -7,16 +7,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements GetFlickrJSONData.OnDataAvaialble {
+public class MainActivity extends AppCompatActivity implements GetFlickrJSONData.OnDataAvailable, RecyclerItemClickListener.OnRecyclerClickListener {
     private static final String TAG = "MainActivity";
+    private FlickrRecyclerViewAdapter nFlickrRecyclerViewAdapter;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +30,12 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJSONData
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, this));
+        nFlickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
+        recyclerView.setAdapter(nFlickrRecyclerViewAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJSONData
         Log.d(TAG, "onResume: Starts");
         super.onResume();
         GetFlickrJSONData getFlickrJSONData = new GetFlickrJSONData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
-        getFlickrJSONData.execute("world war, memes");
+        getFlickrJSONData.execute("world war");
         Log.d(TAG, "onResume: ends");
     }
 
@@ -74,11 +85,60 @@ public class MainActivity extends AppCompatActivity implements GetFlickrJSONData
 
     @Override
     public void onDataAvailable(List<Photo> data, DownloadStatus status) {
+        Log.d(TAG, "onDataAvailable: Start");
         if(status == DownloadStatus.OK){
-            Log.d(TAG, "onDataAvailable: success " + data);
+            nFlickrRecyclerViewAdapter.loadNewData(data);
         }
         else{
             Log.d(TAG, "onDataAvailable: failure " + status);
         }
+
+        Log.d(TAG, "onDataAvailable: Ends");
+    }
+
+    @Override
+    public void onItemsClick(View view, int position) {
+        Log.d(TAG, "onItemsClick: Starts");
+        Toast.makeText(MainActivity.this, "Short Click at position " + position, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onItemLongClick(View view, int position) {
+        Log.d(TAG, "onItemLongClick: Starts");
+        Toast.makeText(MainActivity.this, "Long Click at position" + position, Toast.LENGTH_SHORT).show();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
