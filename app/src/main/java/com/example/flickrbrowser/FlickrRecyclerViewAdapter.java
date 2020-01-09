@@ -37,14 +37,14 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
     @Override
     public void onBindViewHolder(@NonNull FlickrImageViewHolder holder, int position) {
     //called by the layout manager when it needs more data in existing row
-        Photo photItem = memberPhotoList.get(position);
-        Log.d(TAG, "onBindViewHolder: " + photItem.getMemberTitle() + "---->" + position);
-        Picasso.get().load(photItem.getMemberImage())
+        Photo photoItem = memberPhotoList.get(position);
+        Log.d(TAG, "onBindViewHolder: " + photoItem.getMemberTitle() + "---->" + position);
+        Picasso.get().load(photoItem.getMemberImage())
                 .error(R.drawable.place_holder)
                 .placeholder(R.drawable.place_holder)
                 .into(holder.thumbnail);
 
-        holder.title.setText(photItem.getMemberTitle());
+        holder.title.setText(photoItem.getMemberTitle());
     }
 
     @Override
