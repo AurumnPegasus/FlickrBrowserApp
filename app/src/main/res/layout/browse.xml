@@ -12,11 +12,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:contentDescription="@string/browse_content_description"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/place_holder" />
 
     <TextView
         android:id="@+id/title"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:textAppearance="@color/secondary_text"
+        android:fontFamily="sans-serif-smallcaps"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

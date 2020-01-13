@@ -1,6 +1,7 @@
 package com.example.flickrbrowser;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,9 +27,13 @@ public class PhotoDetailActivity extends BaseActivity {
         if(photo!=null)
         {
             TextView photo_title = findViewById(R.id.photo_title);
-            photo_title.setText(photo.getMemberTitle());
+            Resources resources = getResources();
+            String text = resources.getString(R.string.photo_title_text, photo.getMemberTitle());
+            photo_title.setText(text);
+ //           photo_title.setText(photo.getMemberTitle());
             TextView photo_tags = findViewById(R.id.photo_tags);
-            photo_tags.setText("Tags " + photo.getMemberTags());
+            photo_tags.setText(resources.getString(R.string.photo_tags_text, photo.getMemberTags()));
+ //           photo_tags.setText("Tags " + photo.getMemberTags());
             TextView photo_author = findViewById(R.id.photo_author);
             photo_author.setText(photo.getMemberAuthor());
             ImageView photo_image = findViewById(R.id.photo_image);

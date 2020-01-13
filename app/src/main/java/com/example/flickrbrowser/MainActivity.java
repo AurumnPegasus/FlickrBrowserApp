@@ -1,6 +1,7 @@
 package com.example.flickrbrowser;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
@@ -38,14 +40,14 @@ public class MainActivity extends BaseActivity implements GetFlickrJSONData.OnDa
         nFlickrRecyclerViewAdapter = new FlickrRecyclerViewAdapter(new ArrayList<Photo>(), this);
         recyclerView.setAdapter(nFlickrRecyclerViewAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+    /*    FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
  //       GetRawData getRawData = new GetRawData(this);
   //      getRawData.execute("https://www.flickr.com/services/feeds/photos_public.gne?tags=fanart&format=json&nojsoncallback=1");
@@ -56,8 +58,12 @@ public class MainActivity extends BaseActivity implements GetFlickrJSONData.OnDa
     protected void onResume() {
         Log.d(TAG, "onResume: Starts");
         super.onResume();
-        GetFlickrJSONData getFlickrJSONData = new GetFlickrJSONData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
-        getFlickrJSONData.execute("world war");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String query_result = sharedPreferences.getString(FLICKR_QUERY, "");
+        if(query_result.length() != 0) {
+            GetFlickrJSONData getFlickrJSONData = new GetFlickrJSONData("https://www.flickr.com/services/feeds/photos_public.gne", "en-us", true, this);
+            getFlickrJSONData.execute(query_result);
+        }
         Log.d(TAG, "onResume: ends");
     }
 
@@ -76,11 +82,12 @@ public class MainActivity extends BaseActivity implements GetFlickrJSONData.OnDa
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(id == R.id.action_search)
+        {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
