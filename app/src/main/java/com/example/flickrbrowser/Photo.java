@@ -1,7 +1,6 @@
 package com.example.flickrbrowser;
 
 import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 
 class Photo implements Serializable {
@@ -17,7 +16,6 @@ class Photo implements Serializable {
     public Photo(String memberTitle, String memberAuthor, String memberAuthorId, String memberImage, String memberLink, String memberTags) {
         this.memberTitle = memberTitle;
         this.memberAuthor = memberAuthor;
-        this.memberAuthorId = memberAuthorId;
         this.memberImage = memberImage;
         this.memberLink = memberLink;
         this.memberTags = memberTags;
@@ -31,7 +29,7 @@ class Photo implements Serializable {
         return memberAuthor;
     }
 
-    String getMemberAuthorId() {
+    public String getMemberAuthorId() {
         return memberAuthorId;
     }
 
@@ -53,8 +51,8 @@ class Photo implements Serializable {
         return "Photo{ " +
                 "Title is " + memberTitle + "\n" +
                 "Author is" + memberAuthor + "\n" +
-                "Author id is " + memberAuthorId + "\n" +
                 "Tags is " + memberTags + "\n" +
+                "Tag id is " + memberAuthorId + "\n" +
                 "Image is" + memberImage + "\n" +
                 "Link is" + memberLink + "\n}\n";
     }
