@@ -35,7 +35,9 @@ public class MainActivity extends BaseActivity implements GetFlickrJSONData.OnDa
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());//gets stored data, this is so that whenever Activity is deleted, the app begins from where it was left
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        //gets stored data, this is so that whenever Activity is deleted,
+        // the app begins from where it was left
         String query_result = sharedPreferences.getString(FLICKR_QUERY, "");//the data is stored with the key FLICKR_QUERY
 
         if(query_result.length() != 0)//checking for default value
@@ -89,7 +91,7 @@ public class MainActivity extends BaseActivity implements GetFlickrJSONData.OnDa
         //https://zocada.com/using-intents-extras-pass-data-activities-android-beginners-guide/
 
         Intent intent = new Intent(this, PhotoDetailActivity.class);
-        intent.putExtra(PHOTO_TRANSFER, nFlickrRecyclerViewAdapter.getPhoto(position));
+        intent.putExtra(PHOTO_TRANSFER, nFlickrRecyclerViewAdapter.getPhoto(position));//gets that particular photo and passes it to another activity
         startActivity(intent);
     }
 }

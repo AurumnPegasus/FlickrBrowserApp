@@ -1,7 +1,6 @@
 package com.example.flickrbrowser;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +35,10 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
     //called by the layout manager when it needs more data in existing row
         if(memberPhotoList==null || memberPhotoList.size() == 0)
         {
-            holder.thumbnail.setImageResource(R.drawable.place_holder);//setting the default image in the image holder
-            holder.title.setText("No Photos Match of your search, use the search icon to search for photos");//setting the default text in the image holder
+            holder.thumbnail.setImageResource(R.drawable.place_holder);
+            //setting the default image in the image holder
+            holder.title.setText("No Photos Match of your search, use the search icon to search for photos");
+            //setting the default text in the image holder
         }
         else {
             Photo photoItem = memberPhotoList.get(position);//makes a new object of Photo
@@ -58,7 +59,9 @@ class FlickrRecyclerViewAdapter extends RecyclerView.Adapter<FlickrRecyclerViewA
     void loadNewData(List<Photo> newPhoto)
     {
         memberPhotoList = newPhoto;
-        notifyDataSetChanged();//Notifies the attached observers that the underlying data has been changed and any View reflecting the data set should refresh itself.
+        notifyDataSetChanged();
+        //Notifies the attached observers that the underlying data
+        // has been changed and any View reflecting the data set should refresh itself.
         //https://developer.android.com/reference/android/widget/BaseAdapter#notifyDataSetChanged()
     }
 

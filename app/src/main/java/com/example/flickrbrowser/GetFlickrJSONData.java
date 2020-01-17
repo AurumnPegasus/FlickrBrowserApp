@@ -2,7 +2,6 @@ package com.example.flickrbrowser;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,9 +37,9 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
 
     @Override
     protected List<Photo> doInBackground(String... params) {
-        String destinationUri = createUri(params[0], memberLanguage, memberMatchAll);
+        String destinationUri = createUri(params[0], memberLanguage, memberMatchAll);//Creates the whole url with all the appropriate api calls
         GetRawData getRawData = new GetRawData(this);
-        getRawData.runInsideThread(destinationUri);
+        getRawData.runInsideThread(destinationUri);//Non Async Call to GetRawData
         return memberPhotoList;
     }
 
@@ -64,25 +63,25 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
     }
 
     @Override
-    public void onDownloadCompleted(String data, DownloadStatus status) {
+    public void onDownloadCompleted(String data, DownloadStatus status)//call back from GetRawData
+    {
         if(status == DownloadStatus.OK)
         {
             memberPhotoList = new ArrayList<>();
             try{
                 JSONObject jsonObject = new JSONObject(data);
-                JSONArray itemsArray = jsonObject.getJSONArray("items");
+                JSONArray itemsArray = jsonObject.getJSONArray("items");//appropriate tags
                 for(int i=0;i<itemsArray.length();i++)
                 {
-                    JSONObject jsonPhoto = itemsArray.getJSONObject(i);
+                    JSONObject jsonPhoto = itemsArray.getJSONObject(i);//get first object which is enclosed withing <item> tags
                     String title = jsonPhoto.getString("title");
                     String author = jsonPhoto.getString("author");
-                    String authorId = jsonPhoto.getString("author_id");
                     String tags = jsonPhoto.getString("tags");
                     JSONObject jsonMedia = jsonPhoto.getJSONObject("media");
                     String photoURL = jsonMedia.getString("m");
-                    String link = photoURL.replaceFirst("_m.","_b.");
+                    String link = photoURL.replaceFirst("_m.","_b.");//changing the size of the image from medium to big
 
-                    Photo photoObject = new Photo(title, author, authorId,photoURL, link, tags);
+                    Photo photoObject = new Photo(title, author, photoURL, link, tags);
                     memberPhotoList.add(photoObject);
                 }
             }
@@ -93,7 +92,8 @@ class GetFlickrJSONData extends AsyncTask<String, Void, List<Photo>> implements 
         }
         if(memberCallBack != null && runningOnSameThread)
         {
-            memberCallBack.onDataAvailable(memberPhotoList, status);
+            //doesnt come here, it is mainly for if I want to use executeOnSameThread
+            memberCallBack.onDataAvailable(memberPhotoList, status);//call back to MainActivity
         }
     }
 }

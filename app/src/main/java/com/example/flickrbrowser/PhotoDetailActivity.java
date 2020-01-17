@@ -3,15 +3,7 @@ package com.example.flickrbrowser;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,24 +15,22 @@ public class PhotoDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_photo_detail);
         activateToolBar(true);
         Intent intent = getIntent();
-        Photo photo = (Photo)intent.getSerializableExtra(PHOTO_TRANSFER);
+        Photo photo = (Photo)intent.getSerializableExtra(PHOTO_TRANSFER);//get the photo which was put in PHOTO_TRANSFER( to show it big )
         if(photo!=null)
         {
             TextView photo_title = findViewById(R.id.photo_title);
-            Resources resources = getResources();
+            Resources resources = getResources();//using the Strings file
             String text = resources.getString(R.string.photo_title_text, photo.getMemberTitle());
             photo_title.setText(text);
- //           photo_title.setText(photo.getMemberTitle());
             TextView photo_tags = findViewById(R.id.photo_tags);
             photo_tags.setText(resources.getString(R.string.photo_tags_text, photo.getMemberTags()));
- //           photo_tags.setText("Tags " + photo.getMemberTags());
             TextView photo_author = findViewById(R.id.photo_author);
             photo_author.setText(photo.getMemberAuthor());
-            ImageView photo_image = findViewById(R.id.photo_image);
+            ImageView photo_image = findViewById(R.id.photo_image);//loading that image via Picasso
             Picasso.get().load(photo.getMemberLink())
                     .error(R.drawable.place_holder)
                     .placeholder(R.drawable.place_holder)
-                    .into(photo_image);
+                    .into(photo_image);//setting that image
         }
     }
 
